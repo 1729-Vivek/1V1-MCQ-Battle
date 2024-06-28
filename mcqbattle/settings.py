@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'rest_framework',
     'auth_app', 
+    'mcqs',
     'rest_framework_simplejwt',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
