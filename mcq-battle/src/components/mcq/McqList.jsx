@@ -1,13 +1,12 @@
-import { Button, Card, List, Modal } from "antd";
 import React, { useEffect, useState } from "react";
+import { Button, Card, List, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { GetMCQs, DeleteMcq } from "./mcq.service";
 import { Urls } from "../../constant/Urls";
-import { DeleteMcq, GetMCQs } from "./mcq.service";
 
 const MCQList = () => {
   const navigate = useNavigate();
-
   const [mcqs, setMcqs] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedMCQ, setSelectedMCQ] = useState(null);
@@ -27,7 +26,7 @@ const MCQList = () => {
 
   const deleteMcq = async (id) => {
     try {
-      const response = await DeleteMcq(id);
+      await DeleteMcq(id);
       toast.success("MCQ deleted successfully!");
       getMcqs();
     } catch (err) {
