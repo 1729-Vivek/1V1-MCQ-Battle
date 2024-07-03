@@ -1,21 +1,19 @@
 from django.shortcuts import render
-
-# Create your views here.
-# views.py
-from auth_app.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegistrationSerializer, LoginSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny  # Import AllowAny
+from auth_app.models import User
 
 
 class RegisterView(APIView):
+    permission_classes = [AllowAny]  # Allow any user to access this endpoint
+
     def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
-
             # Check if user already exists
             user = User.objects.filter(email=serializer.validated_data["email"]).first()
             if user is not None:
@@ -49,6 +47,10 @@ class LoginView(APIView):
             email = serializer.validated_data["email"]
             password = serializer.validated_data["password"]
             user = User.objects.filter(email=email).first()
+
+            print(f"Email: {email}, Password: {password}")  # Debugging
+            print(f"User: {user}")  # Debugging
+
             if user is None:
                 return Response(
                     {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
@@ -63,9 +65,11 @@ class LoginView(APIView):
                     "refresh": str(refresh),
                     "access": str(refresh.access_token),
                 },
-                status=status.HTTP_200_OK,
+                status=status.HTTP_200_OK
             )
+        print(serializer.errors)  # Debugging
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class ProtectedView(APIView):
