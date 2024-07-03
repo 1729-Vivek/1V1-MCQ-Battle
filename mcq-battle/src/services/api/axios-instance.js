@@ -13,7 +13,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = AuthCookies.GetAccessToken();
-    if (token) {
+    // Check if the request URL is not for the register endpoint
+    if (token && !config.url.endsWith('/register/')) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;

@@ -15,13 +15,14 @@ const Login = () => {
   const onFinish = async (values) => {
     try {
       const response = await login(values); // Use the login service
+      console.log('Login response:', response);  // Debugging
       AuthCookies.SetAccessToken(response.data.access);
       AuthCookies.SetRefreshToken(response.data.refresh);
       setIsLoggedInUser(true);
       toast.success("Login successful!");
       navigate(Urls.Home());
     } catch (err) {
-      console.log(err);
+      console.error('Login error:', err);  // Debugging
       toast.error("Incorrect username or password!");
     }
   };
@@ -60,4 +61,4 @@ const Login = () => {
   );
 };
 
-export default Login
+export default Login;
