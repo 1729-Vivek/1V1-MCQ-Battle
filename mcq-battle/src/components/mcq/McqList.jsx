@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Urls } from "../../constant/Urls";
-import { DeleteMcq, GetMCQs } from "../../services/api/mcq/mcq.service";
+import { DeleteMcq, GetMCQs } from "./mcq.service";
 
 const MCQList = () => {
   const navigate = useNavigate();

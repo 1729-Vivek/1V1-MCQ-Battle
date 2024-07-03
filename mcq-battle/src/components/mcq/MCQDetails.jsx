@@ -2,7 +2,7 @@ import { Button, Card, List, Modal, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Urls } from "../../constant/Urls";
-import { GetMCQ } from "../../services/api/mcq/mcq.service";
+import { GetMCQ } from "./mcq.service";
 
 const MCQDetails = () => {
   const { id: mcqId } = useParams();

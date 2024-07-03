@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Urls } from "../../constant/Urls";
 import AuthContext from "../../contexts/auth.context";
-import { login } from "../../services/api/authService"; // Import the login service
+import { login } from "../../services/api/auth/auth.service"; // Import the login service
 import AuthCookies from "../../services/cookie/authToken.cookie";
 
-const LoginComponent = () => {
+const Login = () => {
   const { setIsLoggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -60,4 +60,4 @@ const LoginComponent = () => {
   );
 };
 
-export default LoginComponent;
+export default Login

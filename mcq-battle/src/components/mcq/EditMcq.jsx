@@ -1,30 +1,71 @@
-import { Button, Card, Checkbox, Form, Input } from "antd";
-import React, { useState } from "react";
+import { Button, Card, Checkbox, Form, Input, Spin } from "antd";
+import React, { useEffect, useState } from "react";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Urls } from "../../constant/Urls";
-import { CreateMcq } from "../../services/api/mcq/mcq.service";
+import { GetMCQ, UpdateMcq } from "./mcq.service";
 
-const NewMcq = () => {
-  const [options, setOptions] = useState([
-    { id: 1, body: "", is_correct: false },
-  ]);
-  const [id, setId] = useState(2);
-  const [loading, setLoading] = useState(false);
+const EditMcq = () => {
+  const { id: mcqId } = useParams();
+  const [mcq, setMcq] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [options, setOptions] = useState([]);
+  const [id, setId] = useState(1);
 
-  const createMcq = async (data) => {
+  useEffect(() => {
+    getMcq();
+  }, [mcqId]);
+
+  const getMcq = async () => {
     try {
-      const response = await CreateMcq(data);
-      toast.success("MCQ created successfully!");
+      const response = await GetMCQ(mcqId);
+      setMcq(response.data);
+      form.setFieldsValue({
+        body: response.data.body,
+        explanation: response.data.explanation,
+        ...response.data.options.reduce((acc, option, index) => {
+          acc[`option_${index + 1}`] = option.body;
+          acc[`is_correct_${index + 1}`] = option.is_correct;
+          return acc;
+        }, {}),
+      });
+      setOptions(
+        response.data.options.map((option, index) => ({
+          id: index + 1,
+          is_correct: option.is_correct,
+          body: option.body,
+        }))
+      );
+      setId(response.data.options.length + 1);
+    } catch (err) {
+      console.error("Error fetching the MCQ:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateMcq = async (data) => {
+    try {
+      const response = await UpdateMcq(mcqId, data);
+      toast.success("MCQ updated successfully!");
       navigate(Urls.Mcqs.Mcqs());
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const addOption = () => {
+    setOptions([...options, { id: id, is_correct: false, body: "" }]);
+    setId(id + 1);
+  };
+
+  const removeOption = (id) => {
+    setOptions(options.filter((option) => option.id !== id));
   };
 
   const handleFinish = (values) => {
@@ -37,22 +78,25 @@ const NewMcq = () => {
         is_correct: values[`is_correct_${option.id}`] || false,
       })),
     };
-    createMcq(data);
+    updateMcq(data);
   };
 
-  const addOption = () => {
-    setOptions([...options, { id: id, is_correct: false, body: "" }]);
-    setId(id + 1);
-  };
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
-  const removeOption = (id) => {
-    setOptions(options.filter((option) => option.id !== id));
-  };
+  if (!mcq) {
+    return <p>MCQ not found.</p>;
+  }
 
   return (
     <div className="container flex flex-col items-center justify-center flex-grow p-4 mx-auto mb-5">
-      <h1 className="mt-5 mb-4 text-2xl font-bold text-center">Create Mcq</h1>
-      <Card className="w-full shadow-lg lg:w-1/2">
+      <h1 className="mt-5 mb-4 text-2xl font-bold text-center">Edit Mcq</h1>
+      <Card title={`MCQ ID: ${mcq.id}`} className="w-full shadow-lg lg:w-1/2">
         <Form form={form} layout="vertical" onFinish={handleFinish}>
           <Form.Item
             label="Question"
@@ -104,7 +148,7 @@ const NewMcq = () => {
           >
             <Input.TextArea rows={4} />
           </Form.Item>
-          <Form.Item className="mb-0">
+          <Form.Item className="mb-0 ">
             <div className="flex justify-between w-full">
               <Button type="" onClick={() => navigate(Urls.Mcqs.Mcqs())}>
                 Cancel
@@ -120,4 +164,4 @@ const NewMcq = () => {
   );
 };
 
-export default NewMcq;
+export default EditMcq;

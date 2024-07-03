@@ -1,25 +1,24 @@
-// src/services/api/axios-instance.js
 import axios from "axios";
-import AuthCookies from "../cookie/AuthCookies";
-const BASE_URL = import.meta.env.VITE_BASE_API_URL;
+import AuthCookies from "../cookie/authToken.cookie";
 
-// Create an Axios instance
-const axiosInstance = axios.create();
+const BASE_URL = import.meta.env.VITE_BASE_API_URL || 'http://127.0.0.1:8000/';  // Ensure the URL is correct
 
-// Set up a request interceptor
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 axiosInstance.interceptors.request.use(
   (config) => {
-    config.url = BASE_URL + config.url;
-
     const token = AuthCookies.GetAccessToken();
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
-
     return config;
   },
   (error) => {
-    // Handle request error here
     return Promise.reject(error);
   }
 );

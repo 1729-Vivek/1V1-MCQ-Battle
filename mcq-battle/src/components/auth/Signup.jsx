@@ -2,11 +2,12 @@ import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+
 import { toast } from "react-toastify";
 import { Urls } from "../../constant/Urls";
-import { signup } from "../../services/api/authService"; // Import the signup service
+import { signup } from "../../services/api/auth/auth.service"; // Import the signup service
 
-const SignupComponent = () => {
+const Signup = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -90,4 +91,4 @@ const SignupComponent = () => {
   );
 };
 
-export default SignupComponent;
+export default Signup;

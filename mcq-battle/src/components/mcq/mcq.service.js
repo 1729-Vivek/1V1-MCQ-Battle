@@ -31,7 +31,7 @@ export const GetMCQs = async () => {
  * @returns {Promise} - Axios response promise with the created MCQ data.
  */
 export const CreateMcq = async (data) => {
-  return await axiosInstance.post(`/mcqs`, data);
+  return await axiosInstance.post(`/mcqs/`, data);  // Correct path with trailing slash
 };
 
 /**
