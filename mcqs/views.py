@@ -11,6 +11,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics,permissions,status
 from .models import Game
 from .serializers import GameSerializer
+import pusher
+
+pusher_client = pusher.Pusher(
+  app_id=settings.PUSHER_APP_ID,
+  key=settings.PUSHER_KEY,
+  secret=settings.PUSHER_SECRET,
+  cluster=settings.PUSHER_CLUSTER,
+  ssl=True
+)
 
 class MCQListCreateView(APIView):
     permission_classes = [IsAuthenticated]
