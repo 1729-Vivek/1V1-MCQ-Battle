@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path
 
 from auth_app.views import LoginView, ProtectedView, RegisterView
-from mcqs.views import MCQListCreateView,ListGamesView,CreateGameView, MCQRetrieveUpdateDestroyView
+from mcqs.views import MCQListCreateView,JoinGameView,ListGamesView,CreateGameView, MCQRetrieveUpdateDestroyView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
