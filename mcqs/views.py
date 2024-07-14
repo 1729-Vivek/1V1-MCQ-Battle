@@ -82,3 +82,15 @@ class ListGamesView(generics.ListAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         mcq.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class JoinGameView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, game_id):
+        game = Game.objects.get(game_id=game_id)
+        if game.status == 'waiting':
+            game.participants.add(request.user)
+            game.status = 'active'
+            game.save()
+            return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
+        return Response({'error': 'Game is not available'}, status=status.HTTP_400_BAD_REQUEST)
