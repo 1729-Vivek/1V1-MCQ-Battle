@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path
 
 from auth_app.views import LoginView, ProtectedView, RegisterView
-from mcqs.views import MCQListCreateView,CreateGameView, MCQRetrieveUpdateDestroyView
+from mcqs.views import MCQListCreateView,ListGamesView,CreateGameView, MCQRetrieveUpdateDestroyView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -13,4 +13,5 @@ urlpatterns = [
     path("mcqs/", MCQListCreateView.as_view(), name="mcq-list-create"),  # Added trailing slash
     path("mcqs/<uuid:pk>/", MCQRetrieveUpdateDestroyView.as_view(), name="mcq-detail"),  # Added trailing slash
     path('create-game/', CreateGameView.as_view(), name='create-game'),
+     path('list-games/', ListGamesView.as_view(), name='list-games'),
 ]
