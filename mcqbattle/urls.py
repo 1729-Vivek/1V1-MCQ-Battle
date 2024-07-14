@@ -13,5 +13,6 @@ urlpatterns = [
     path("mcqs/", MCQListCreateView.as_view(), name="mcq-list-create"),  # Added trailing slash
     path("mcqs/<uuid:pk>/", MCQRetrieveUpdateDestroyView.as_view(), name="mcq-detail"),  # Added trailing slash
     path('create-game/', CreateGameView.as_view(), name='create-game'),
-     path('list-games/', ListGamesView.as_view(), name='list-games'),
+     path('join-game/<int:game_id>/', JoinGameView.as_view(), name='join-game'),
+    path('list-games/', ListGamesView.as_view(), name='list-games'),
 ]
