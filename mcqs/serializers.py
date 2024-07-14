@@ -20,9 +20,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 # Game Serializer
+
 class GameSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)
-    participants = UserSerializer(many=True, read_only=True)
+    owner = serializers.ReadOnlyField(source='owner.username')
+    participants = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Game
