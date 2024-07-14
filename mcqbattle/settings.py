@@ -135,3 +135,8 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PUSHER_APP_ID = '1834030'
+PUSHER_KEY = 'd29bf340b0ce1bfc0bc9'
+PUSHER_SECRET = 'e3d076b9d32b0e4a2c0f'
+PUSHER_CLUSTER = 'ap2'
