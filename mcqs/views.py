@@ -39,6 +39,7 @@ class CreateGameView(APIView):
         game = Game.objects.create(owner=request.user)
         game.participants.add(request.user)
         game.save()
+        pusher_client.trigger('game-channel', 'game-created', {'game': GameSerializer(game).data})
         return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
 
 class MCQRetrieveUpdateDestroyView(APIView):
