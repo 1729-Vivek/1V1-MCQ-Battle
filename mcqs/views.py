@@ -49,6 +49,12 @@ class MCQRetrieveUpdateDestroyView(APIView):
             return MCQ.objects.get(pk=pk)
         except MCQ.DoesNotExist:
             return None
+class ListGamesView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = GameSerializer
+
+    def get_queryset(self):
+        return Game.objects.filter(status='waiting')
 
     def get(self, request, pk):
         mcq = self.get_object(pk)
