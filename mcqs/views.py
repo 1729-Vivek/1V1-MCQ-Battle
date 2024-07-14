@@ -13,13 +13,26 @@ from .models import Game
 from .serializers import GameSerializer
 import pusher
 
-pusher_client = pusher.Pusher(
-  app_id=settings.PUSHER_APP_ID,
-  key=settings.PUSHER_KEY,
-  secret=settings.PUSHER_SECRET,
-  cluster=settings.PUSHER_CLUSTER,
-  ssl=True
-)
+
+# from django.conf import settings
+# pusher_client = pusher.Pusher(
+#   app_id=settings.PUSHER_APP_ID,
+#   key=settings.PUSHER_KEY,
+#   secret=settings.PUSHER_SECRET,
+#   cluster=settings.PUSHER_CLUSTER,
+#   ssl=True
+# )
+
+# mcqs/views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .pusher_client import pusher_client
+
+@api_view(['POST'])
+def test_pusher(request):
+    # Your game starting logic
+    pusher_client.trigger('game-channel', 'game-start', {'message': 'Game has started!'})
+    return Response({'status': 'Game started'})
 
 class MCQListCreateView(APIView):
     permission_classes = [IsAuthenticated]
