@@ -8,6 +8,9 @@ from rest_framework import status
 from .models import MCQ
 from .serializers import MCQSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics,permissions,status
+from .models import Game
+from .serializers import GameSerializer
 
 class MCQListCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -28,6 +31,15 @@ class MCQListCreateView(APIView):
             mcq.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateGameView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        game = Game.objects.create(owner=request.user)
+        game.participants.add(request.user)
+        game.save()
+        return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
 
 class MCQRetrieveUpdateDestroyView(APIView):
     permission_classes = [IsAuthenticated]
