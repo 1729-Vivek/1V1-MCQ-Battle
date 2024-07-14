@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -10,3 +11,17 @@ class MCQ(models.Model):
     body = models.TextField()
     explanation = models.TextField()
     options = models.JSONField()
+
+
+class Game(models.Model):
+    STATUS_CHOICES = [
+        ('waiting', 'Waiting'),
+        ('active', 'Active'),
+        ('completed', 'Completed'),
+    ]
+
+    game_id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(User, related_name='owned_games', on_delete=models.CASCADE)
+    participants = models.ManyToManyField(User, related_name='games')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='waiting')
+    created_at = models.DateTimeField(auto_now_add=True)
