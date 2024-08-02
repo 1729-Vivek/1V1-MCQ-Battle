@@ -1,6 +1,8 @@
+// src/components/game/Game.jsx
 import React, { useEffect, useState } from 'react';
-import { GetGame, StartGame } from '../../services/api/mcq/mcq.service';
 import Pusher from 'pusher-js';
+import { GetGame, StartGame } from '../../services/api/mcq/mcq.service';
+import { toast } from 'react-toastify';
 
 const Game = ({ gameId }) => {
   const [game, setGame] = useState(null);
@@ -25,20 +27,14 @@ const Game = ({ gameId }) => {
   }, [gameId]);
 
   const fetchGame = async () => {
-    try {
-      const response = await GetGame(gameId);
-      setGame(response.data);
-    } catch (err) {
-      console.error('Error fetching game:', err);
-    }
+    const data = await GetGame(gameId);
+    setGame(data);
   };
 
   const handleStartGame = async () => {
-    try {
-      await StartGame(gameId);
+    const result = await StartGame(gameId);
+    if (result) {
       fetchGame();
-    } catch (err) {
-      console.error('Error starting game:', err);
     }
   };
 

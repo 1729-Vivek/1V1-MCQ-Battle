@@ -3,14 +3,24 @@ import axios from 'axios';
 import { Button, List, Card } from 'antd';
 import { toast } from 'react-toastify';
 import Pusher from 'pusher-js';
-
+import { useNavigate } from 'react-router-dom';
 const Lobby = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchGames = async () => {
     try {
-      const response = await axios.get('/api/list-games/');
+      const token = localStorage.getItem('token');
+      console.log('Token:', token); // Debugging
+      if (!token) {
+        throw new Error('No token found');
+      }
+      const response = await axios.get('/api/list-games/', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('Response:', response); // Debugging
       setGames(response.data);
     } catch (err) {
       console.error('Error fetching games:', err);
@@ -40,7 +50,12 @@ const Lobby = () => {
 
   const createGame = async () => {
     try {
-      await axios.post('/api/create-game/');
+      const token = localStorage.getItem('token'); // Get the token from local storage
+      await axios.post('/api/create-game/', {}, {
+        headers: {
+          'Authorization': `Bearer ${token}` // Include the token in the headers
+        }
+      });
       toast.success('Game created successfully!');
       // Refresh the games list
       fetchGames();
@@ -50,15 +65,27 @@ const Lobby = () => {
     }
   };
 
+
+
+  // Inside your Lobby component
+  const navigate = useNavigate();
+  
   const joinGame = async (gameId) => {
     try {
-      await axios.post(`/api/join-game/${gameId}/`);
+      const token = localStorage.getItem('token'); // Get the token from local storage
+      const response = await axios.post(`/api/join-game/${gameId}/`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}` // Include the token in the headers
+        }
+      });
       toast.success('Successfully joined the game!');
+      navigate(`/game/${gameId}`); // Navigate to the contest page
     } catch (err) {
       console.error('Error joining game:', err);
       toast.error('Failed to join the game.');
     }
   };
+  
 
   if (loading) {
     return <div>Loading...</div>;
