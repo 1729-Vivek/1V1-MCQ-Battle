@@ -99,6 +99,17 @@ const Initial_Nav_Items = [
   },
   {
     label: (
+      <Link to={Urls.Mcqs.Lobby()} className="p-4">
+        Lobby
+      </Link>
+    ),
+    key: Urls.Mcqs.Lobby(),
+    isProtected: true, // Protected route
+    showAfterLogin: true, // Show after login
+  },
+  
+  {
+    label: (
       <Link to={Urls.Login()} className="p-4">
         Login
       </Link>
@@ -119,3 +130,4 @@ const Initial_Nav_Items = [
     showAfterLogin: false, // Hide after login
   },
 ];
+

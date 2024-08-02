@@ -54,6 +54,7 @@ class MCQListCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# mcqs/views.py
 class CreateGameView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -63,6 +64,7 @@ class CreateGameView(APIView):
         game.save()
         pusher_client.trigger('game-channel', 'game-created', {'game': GameSerializer(game).data})
         return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
+
 
 class MCQRetrieveUpdateDestroyView(APIView):
     permission_classes = [IsAuthenticated]
@@ -110,10 +112,14 @@ class JoinGameView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, game_id):
-        game = Game.objects.get(game_id=game_id)
-        if game.status == 'waiting':
-            game.participants.add(request.user)
-            game.status = 'active'
-            game.save()
-            return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
-        return Response({'error': 'Game is not available'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            game = Game.objects.get(game_id=game_id)
+            if game.status == 'waiting':
+                game.participants.add(request.user)
+                game.status = 'active'
+                game.save()
+                return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
+            return Response({'error': 'Game is not available'}, status=status.HTTP_400_BAD_REQUEST)
+        except Game.DoesNotExist:
+            return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
+
