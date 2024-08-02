@@ -9,7 +9,7 @@ import McqPage from "../pages/mcq/McqPage.jsx";
 import McqsPage from "../pages/mcq/McqsPage.jsx";
 import NewMcqPage from "../pages/mcq/NewMcqPage.jsx";
 import SignupPage from "../pages/signup.page.jsx";
-import {Urls} from"../constant/Urls.js"
+import { Urls } from "../constant/Urls.js";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import Lobby from "../components/mcq/Lobby"; // Import the Lobby component
 
@@ -52,7 +52,7 @@ const AppRouter = () => {
           </ProtectedRoute>
         }
       />
-      <Route path="/game" element={<GamePage />} /> {/* New GamePage route */}
+      <Route path={Urls.Game(":gameId")} element={<GamePage />} /> {/* New GamePage route */}
     </Routes>
   );
 };

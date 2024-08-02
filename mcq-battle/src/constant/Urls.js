@@ -1,3 +1,4 @@
+// src/constant/Urls.js
 export class Urls {
   static Home() {
     return "/";
@@ -25,4 +26,7 @@ export class Urls {
       return `/mcq/${id}/edit`;
     }
   };
+  static Game(gameId) {
+    return `/game/${gameId}`;
+  }
 }
