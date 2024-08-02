@@ -1,8 +1,8 @@
+# urls.py
 from django.contrib import admin
 from django.urls import path
-from mcqs.views import test_pusher
+from mcqs.views import test_pusher, MCQListCreateView, JoinGameView, ListGamesView, CreateGameView, MCQRetrieveUpdateDestroyView, GameDetailView
 from auth_app.views import LoginView, ProtectedView, RegisterView
-from mcqs.views import MCQListCreateView, JoinGameView, ListGamesView, CreateGameView, MCQRetrieveUpdateDestroyView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('join-game/<int:game_id>/', JoinGameView.as_view(), name='join-game'),
     path('test-pusher/', test_pusher, name='test_pusher'),
     path('list-games/', ListGamesView.as_view(), name='list-games'),
+    path('games/<int:game_id>/', GameDetailView.as_view(), name='game-detail'),  # Add this line
 ]
