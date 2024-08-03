@@ -11,6 +11,11 @@ from .models import MCQ, Game, Answer
 from .serializers import MCQSerializer, GameSerializer, AnswerSerializer
 import pusher
 from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 
 # Pusher client setup
 pusher_client = pusher.Pusher(
@@ -102,6 +107,7 @@ def submit_answers(request, game_id):
         return Response({'score': score, 'incorrect_answers': incorrect_answers}, status=status.HTTP_200_OK)
     except Game.DoesNotExist:
         return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
+
 # Get game results endpoint
 @api_view(['GET'])
 def get_results(request, game_id):
@@ -115,7 +121,6 @@ def get_results(request, game_id):
         return Response(results, status=status.HTTP_200_OK)
     except Game.DoesNotExist:
         return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
-
 
 # MCQ List and Create view
 class MCQListCreateView(APIView):
@@ -194,7 +199,9 @@ class ListGamesView(generics.ListAPIView):
     def get_queryset(self):
         return Game.objects.filter(status='waiting')
 
-# Join Game view
+# views.py
+
+
 class JoinGameView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -203,12 +210,15 @@ class JoinGameView(APIView):
             game = Game.objects.get(game_id=game_id)
             if game.status == 'waiting':
                 game.participants.add(request.user)
-                game.status = 'active'
+                if game.participants.count() == 2:
+                    game.status = 'active'
                 game.save()
                 return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
-            return Response({'error': 'Game is not available'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'Game is not available'}, status=status.HTTP_400_BAD_REQUEST)
         except Game.DoesNotExist:
             return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 # Game Detail view
 class GameDetailView(APIView):
