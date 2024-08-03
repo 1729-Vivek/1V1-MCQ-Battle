@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { GetGame, StartGame, GetMCQs } from '../services/api/mcq/mcq.service';
 import { toast } from 'react-toastify';
-
-// import 'antd/dist/antd.css'; // Import Ant Design styles
+import Pusher from 'pusher-js';
 import { Button, Card, Radio, Typography, Space } from 'antd';
 
 const { Title, Text } = Typography;
@@ -19,6 +18,20 @@ const GamePage = () => {
   useEffect(() => {
     fetchGame();
     fetchMCQs();
+
+    const pusher = new Pusher('d29bf340b0ce1bfc0bc9', {
+      cluster: 'ap2',
+    });
+
+    const channel = pusher.subscribe('game-channel');
+    channel.bind('game-updated', (data) => {
+      // Handle real-time updates
+      fetchGame();
+    });
+
+    return () => {
+      pusher.unsubscribe('game-channel');
+    };
   }, [gameId]);
 
   const fetchGame = async () => {

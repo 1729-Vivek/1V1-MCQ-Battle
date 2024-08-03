@@ -1,12 +1,15 @@
+// src/components/mcq/Lobby.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, List, Card } from 'antd';
 import { toast } from 'react-toastify';
 import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
+
 const Lobby = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchGames = async () => {
     try {
@@ -65,11 +68,6 @@ const Lobby = () => {
     }
   };
 
-
-
-  // Inside your Lobby component
-  const navigate = useNavigate();
-  
   const joinGame = async (gameId) => {
     try {
       const token = localStorage.getItem('token'); // Get the token from local storage
@@ -85,7 +83,6 @@ const Lobby = () => {
       toast.error('Failed to join the game.');
     }
   };
-  
 
   if (loading) {
     return <div>Loading...</div>;
